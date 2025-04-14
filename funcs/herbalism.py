@@ -1,17 +1,14 @@
 import random as r
 
 def rand_herb():
-    f = open("herbs.txt", "r")
+    f = open("txt/herbs.txt", "r")
     content = f.read().splitlines()
-
 
     x = r.randint(0,5)
     y = r.randint(0,5)
-    #print("Rolled %d and %d" % (x+1, y+1))
 
     x2 = r.randint(0,5)
     y2 = r.randint(0,5)
-    #print("Rolled %d and %d" % (x2+1, y2+1))
 
     if x==y:
         prefix = [content[x*6 + y]]
