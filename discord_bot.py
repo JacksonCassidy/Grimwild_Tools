@@ -39,6 +39,11 @@ async def herb(ctx):
     response = rand_herb()
     await ctx.send(response)
 
+@bot.command(name='patron', help='Responds with random results from the Patron Crucible')
+async def patron(ctx):
+    response = rand_patron()
+    await ctx.send(response)
+
 @bot.command(name='explore', help='Responds with message prompting the user to react to choose which exploration crucible to roll on')
 async def explore_msg(ctx):
     msg = await ctx.send(EXPLORE_MSG)

@@ -28,4 +28,4 @@ def rand_spell():
     else:
         essence = content[6 + x*6*3 + y] + " or " + content[6 + y*6*3 + x] + "\n"
 
-    return "*Style:* " + style + "*Form:* " + form + "*Essence:* " + essence
+    return "*Style:*\n    " + style + "*Form:*\n    " + form + "*Essence:*\n    " + essence
