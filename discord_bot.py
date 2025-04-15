@@ -8,7 +8,9 @@ from dotenv import load_dotenv
 
 from reqs import *
 
-EXPLORE_MSG = "Options:\n1:Building\n2:Settlement\n3:Sites\n4:Dangers\n5:Curiosities\n6:Barrier\n7:Factions"
+EXPLORE_MSG = "Options:\n1: Building\n2: Settlement\n3: Sites\n4: Dangers\n5: Curiosities\n6: Barrier\n7: Factions"
+
+SEASON_MSG = "Options:\n1: Spring\n2: Summer\n3: Fall\n4: Winter"
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -43,39 +45,62 @@ async def explore_msg(ctx):
     for i in ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"]:
         await msg.add_reaction(i)
 
+@bot.command(name='season', help='Responds with message prompting the user to react to choose which season to generate a month name for')
+async def season_msg(ctx):
+    msg = await ctx.send(SEASON_MSG)
+    for i in ["1️⃣", "2️⃣", "3️⃣", "4️⃣"]:
+        await msg.add_reaction(i)
+
 @bot.event
 async def on_reaction_add(reaction, user):
     if user.bot:
         return
     
-    if reaction.message.content != EXPLORE_MSG:
+    if reaction.message.content == EXPLORE_MSG:
+        match reaction.emoji:
+            case "1️⃣":
+                response = explore(1)
+                name = "*Building:*\n"
+            case "2️⃣":
+                response = explore(2)
+                name = "*Settlement:*\n"
+            case "3️⃣":
+                response = explore(3)
+                name = "*Site:*\n"
+            case "4️⃣":
+                response = explore(4)
+                name = "*Danger*:\n"
+            case "5️⃣":
+                response = explore(5)
+                name = "*Curiosity:*\n"
+            case "6️⃣":
+                response = explore(6)
+                name = "*Barrier:*\n"
+            case "7️⃣":
+                response = explore(7)
+                name = "*Faction:*\n"
+            case _:
+                return
+            
+    elif reaction.message.content == SEASON_MSG:
+        match reaction.emoji:
+            case "1️⃣":
+                response = month_name(1)
+                name = "*Spring:*\n"
+            case "2️⃣":
+                response = month_name(2)
+                name = "*Summer:*\n"
+            case "3️⃣":
+                response = month_name(3)
+                name = "*Fall:*\n"
+            case "4️⃣":
+                response = month_name(4)
+                name = "*Winter*:\n"
+            case _:
+                return
+    else:
         return
-
-    match reaction.emoji:
-        case "1️⃣":
-            response = explore(1)
-            name = "*Building:*\n"
-        case "2️⃣":
-            response = explore(2)
-            name = "*Settlement:*\n"
-        case "3️⃣":
-            response = explore(3)
-            name = "*Site:*\n"
-        case "4️⃣":
-            response = explore(4)
-            name = "*Danger*:\n"
-        case "5️⃣":
-            response = explore(5)
-            name = "*Curiosity:*\n"
-        case "6️⃣":
-            response = explore(6)
-            name = "*Barrier:*\n"
-        case "7️⃣":
-            response = explore(7)
-            name = "*Faction:*\n"
-        case _:
-            return
-
+    
     await reaction.message.channel.send(name + response)
 
 bot.run(TOKEN)
