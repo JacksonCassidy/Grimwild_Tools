@@ -49,6 +49,11 @@ async def surge(ctx):
     response = wild_surge()
     await ctx.send(response)
 
+@bot.command(name='traps', help='Responds with 3 random results from the Favourite Traps Crucible')
+async def traps(ctx):
+    response = trap_names()
+    await ctx.send(response)
+
 @bot.command(name='explore', help='Responds with message prompting the user to react to choose which exploration crucible to roll on')
 async def explore_msg(ctx):
     msg = await ctx.send(EXPLORE_MSG)
