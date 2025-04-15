@@ -5,3 +5,4 @@ from funcs.exploration import *
 from funcs.herbalism import *
 from funcs.seasons import *
 from funcs.patron import *
+from funcs.surge import *

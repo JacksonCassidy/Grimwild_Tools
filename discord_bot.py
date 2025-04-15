@@ -44,6 +44,11 @@ async def patron(ctx):
     response = rand_patron()
     await ctx.send(response)
 
+@bot.command(name='surge', help='Responds with random results from the Wild Surge Crucible')
+async def surge(ctx):
+    response = wild_surge()
+    await ctx.send(response)
+
 @bot.command(name='explore', help='Responds with message prompting the user to react to choose which exploration crucible to roll on')
 async def explore_msg(ctx):
     msg = await ctx.send(EXPLORE_MSG)
