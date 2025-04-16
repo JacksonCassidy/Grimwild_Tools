@@ -7,3 +7,4 @@ from funcs.seasons import *
 from funcs.patron import *
 from funcs.surge import *
 from funcs.trap import *
+from funcs.tenet import *
