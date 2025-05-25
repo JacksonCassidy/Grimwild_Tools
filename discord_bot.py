@@ -1,7 +1,8 @@
 import os
 
 from discord.ext import commands
-from discord import Intents
+from discord import ButtonStyle as bs
+from discord import Intents, ui
 from dotenv import load_dotenv
 
 from reqs import *
@@ -16,6 +17,68 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 intents = Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
+
+# Currently unused
+'''
+class RemView(ui.View): # currently un
+    @ui.button(label="Remove", style=bs.gray)
+    async def remove(self, interaction, button):
+        await interaction.message.delete()
+'''
+class ExploreView(ui.View):
+    @ui.button(label="1", style=bs.gray)
+    async def opt1(self, interaction, button):
+        await interaction.response.send_message("*Building:*\n" + explore(1))
+    
+    @ui.button(label="2", style=bs.gray)
+    async def opt2(self, interaction, button):
+        await interaction.response.send_message("*Settlement:*\n" + explore(2))
+
+    @ui.button(label="3", style=bs.gray)
+    async def opt3(self, interaction, button):
+        await interaction.response.send_message("*Site:*\n" + explore(3))
+    
+    @ui.button(label="4", style=bs.gray)
+    async def opt4(self, interaction, button):
+        await interaction.response.send_message("*Danger:*\n" + explore(4))
+
+    @ui.button(label="5", row=1, style=bs.gray)
+    async def opt5(self, interaction, button):
+        await interaction.response.send_message("*Curiosity:*\n" + explore(5))
+
+    @ui.button(label="6", row=1, style=bs.gray)
+    async def opt6(self, interaction, button):
+        await interaction.response.send_message("*Barrier:*\n" + explore(6))
+
+    @ui.button(label="7", row=1, style=bs.gray)
+    async def opt7(self, interaction, button):
+        await interaction.response.send_message("*Faction:*\n" + explore(7))
+    
+    @ui.button(label="Remove", row=1, style=bs.red)
+    async def remove(self, interaction, button):
+        await interaction.message.delete()
+
+class SeasonView(ui.View):
+    @ui.button(label="1", style=bs.gray)
+    async def opt1(self, interaction, button):
+        await interaction.response.send_message("*Spring:*\n" + month_name(1))
+    
+    @ui.button(label="2", style=bs.gray)
+    async def opt2(self, interaction, button):
+        await interaction.response.send_message("*Summer:*\n" + month_name(2))
+
+    @ui.button(label="3", style=bs.gray)
+    async def opt3(self, interaction, button):
+        await interaction.response.send_message("*Fall:*\n" + month_name(3))
+    
+    @ui.button(label="4", style=bs.gray)
+    async def opt4(self, interaction, button):
+        await interaction.response.send_message("*Winter:*\n" + month_name(4))
+    
+    @ui.button(label="Remove", style=bs.red)
+    async def remove(self, interaction, button):
+        await interaction.message.delete()
+    
 
 @bot.command(name='heritage', help='Responds with a random heritage from the Heritage Crucible')
 async def heritage(ctx):
@@ -59,66 +122,10 @@ async def tenet(ctx):
 
 @bot.command(name='explore', help='Responds with message prompting the user to react to choose which exploration crucible to roll on')
 async def explore_msg(ctx):
-    msg = await ctx.send(EXPLORE_MSG)
-    for i in ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"]:
-        await msg.add_reaction(i)
+    await ctx.send(EXPLORE_MSG, view=ExploreView())
 
 @bot.command(name='season', help='Responds with message prompting the user to react to choose which season to generate a month name for')
 async def season_msg(ctx):
-    msg = await ctx.send(SEASON_MSG)
-    for i in ["1️⃣", "2️⃣", "3️⃣", "4️⃣"]:
-        await msg.add_reaction(i)
-
-@bot.event
-async def on_reaction_add(reaction, user):
-    if user.bot:
-        return
-    
-    if reaction.message.content == EXPLORE_MSG:
-        match reaction.emoji:
-            case "1️⃣":
-                response = explore(1)
-                name = "*Building:*\n"
-            case "2️⃣":
-                response = explore(2)
-                name = "*Settlement:*\n"
-            case "3️⃣":
-                response = explore(3)
-                name = "*Site:*\n"
-            case "4️⃣":
-                response = explore(4)
-                name = "*Danger*:\n"
-            case "5️⃣":
-                response = explore(5)
-                name = "*Curiosity:*\n"
-            case "6️⃣":
-                response = explore(6)
-                name = "*Barrier:*\n"
-            case "7️⃣":
-                response = explore(7)
-                name = "*Faction:*\n"
-            case _:
-                return
-            
-    elif reaction.message.content == SEASON_MSG:
-        match reaction.emoji:
-            case "1️⃣":
-                response = month_name(1)
-                name = "*Spring:*\n"
-            case "2️⃣":
-                response = month_name(2)
-                name = "*Summer:*\n"
-            case "3️⃣":
-                response = month_name(3)
-                name = "*Fall:*\n"
-            case "4️⃣":
-                response = month_name(4)
-                name = "*Winter*:\n"
-            case _:
-                return
-    else:
-        return
-    
-    await reaction.message.channel.send(name + response)
+    await ctx.send(SEASON_MSG, view=SeasonView())
 
 bot.run(TOKEN)
